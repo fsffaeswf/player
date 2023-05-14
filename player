@@ -1,0 +1,53 @@
+#pragma once
+#include "settings.h"
+#include "game_obj.h"
+
+class Player :public GameObject {
+private:
+	float speed = 0, speedx = 0, speedy = 0;
+	int hp = 100;
+	bool onGround = true;
+
+	float maxSpeed = 10.f;
+	float gravity = 15.f;
+	float accelerationY = 0.5f;
+
+public:
+	Player();
+	void update();
+	void draw(sf::RenderWindow& window);
+};
+
+Player::Player() {
+	texture.loadFromFile(PlayerFileName);
+	sprite.setTexture(texture);
+	sf::FloatRect bounds = sprite.getLocalBounds();
+	sprite.setOrigin(bounds.width / 2, bounds.height / 2);
+	sprite.setPosition(WINDOW_WIDTH/2,WINDOW_HEIGHT-bounds.height/2);
+
+}
+
+//bool Player::onGround() {};
+
+void Player::update() {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		speedx -= 0.1;
+		if (speedx <= -2.f)speedx = -2.f;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		speedx += 0.1;
+		if (speedx >= 2.f)speedx = 2.f;
+	}
+	if (onGround && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		onGround = false;
+
+		speedy -= 0.4f;
+		if (speedy <= -2.f) { speedy = 0; }
+	}
+	
+
+	sprite.move(speedx, speedy);
+
+}
+
+void Player::draw(sf::RenderWindow& window) { window.draw(sprite); };
